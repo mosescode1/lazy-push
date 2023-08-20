@@ -1,6 +1,6 @@
 #!/bin/bash
 
 git add .
-read message
+read -p "Enter The Commit: " message
 git commit -m "$message"
 git push
