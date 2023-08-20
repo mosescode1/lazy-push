@@ -1,9 +1,41 @@
 #!/bin/bash
+# get the number of argument passed and hence ask for an alternative if no argument is passed 
+if [ $# -lt 1 ]; then 
+	read -p "Do you wish to add all (y) or (n): " choice
 
-git add .
-read -p "Enter The Commit: " -e -t 60 message
+	if  [[ "$choice" == "y" || "$choice" == "Y" ]]; then
+		git add .
+	else
+		echo "Nothing to add. Exiting."
+		exit 1
+	fi
+fi
+
+# git add the file based on the number of argument passed
+for arg in "$@"; do
+	if [ -n "$arg" ]; then
+		git add "$arg"
+	else
+		echo "Skipping empty argument."
+	fi
+done
+
+# output the files that added
+echo "Added the following"
+echo "$@"
+
+read -p -e "\nEnter The Commit: "  message
 git commit -m "$message"
-git push
+
+current_branch=$(git symbolic-ref --short HEAD) # get the branch name 
+
+# push from the branch name 
+if [ -n "$current_branch" ]; then
+	git push origin "$current_branch"
+else
+	echo "Unable to determine the current branch. Make sure you are on a valid branch."
+	exit 1
+fi
 
 # Capture the exit status of the git push command
 #exit_status=$?
