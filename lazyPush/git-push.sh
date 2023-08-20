@@ -1,11 +1,12 @@
 #!/bin/bash
 
 git add .
-read -p "Enter The Commit: " message
+read -p "Enter The Commit: " -e -t 20 message
 git commit -m "$message"
 git push
 
 # Capture the exit status of the git push command
+
 exit_status=$?
 
 # Check the exit status and take appropriate actions
